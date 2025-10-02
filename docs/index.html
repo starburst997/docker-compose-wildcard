@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Compose Wildcard DNS - Seamless Subdomain Resolution</title>
+    <meta name="description" content="Enable wildcard subdomain resolution for Docker Compose environments. Perfect for S3-compatible storage, multi-tenant apps, and microservices.">
+    <meta property="og:title" content="Docker Compose Wildcard DNS">
+    <meta property="og:description" content="Enable wildcard subdomain resolution for Docker Compose environments">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0969da;
+            --primary-dark: #0860ca;
+            --secondary: #24292e;
+            --text-primary: #24292e;
+            --text-secondary: #586069;
+            --bg: #ffffff;
+            --bg-light: #f6f8fa;
+            --border: #e1e4e8;
+            --success: #28a745;
+            --radius: 8px;
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            background: var(--bg);
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+            border-color: var(--text-secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0 5rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg) 100%);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Installation Section */
+        .install-section {
+            padding: 1.5rem 0;
+            background: var(--bg);
+        }
+
+        .install-command {
+            background: var(--secondary);
+            color: #f6f8fa;
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            font-family: 'Monaco', 'Courier New', monospace;
+            position: relative;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 4rem 0;
+            background: var(--bg-light);
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 24px;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Code Examples */
+        .examples {
+            padding: 4rem 0;
+            background: var(--bg);
+        }
+
+        .example-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .code-block {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            color: var(--text-primary);
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 4rem 0;
+            background: var(--bg-light);
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .use-case {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .use-case-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .use-case-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .use-case-example {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            background: var(--secondary);
+            color: #f6f8fa;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #f6f8fa;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+                max-width: 300px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">
+                🌐 Docker Compose Wildcard DNS
+            </a>
+            <div class="nav-links">
+                <a href="https://github.com/starburst997/docker-compose-wildcard" class="btn btn-secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+                <a href="https://hub.docker.com/r/starburst997/docker-compose-wildcard" class="btn btn-primary">
+                    Docker Hub
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container animate">
+            <h1>Docker Compose Wildcard DNS</h1>
+            <p class="subtitle">
+                Enable wildcard subdomain resolution for Docker Compose environments.
+                Perfect for S3-compatible storage, multi-tenant applications, and microservices.
+            </p>
+            <div class="hero-buttons">
+                <a href="#quick-start" class="btn btn-primary">
+                    Get Started →
+                </a>
+                <a href="https://github.com/starburst997/docker-compose-wildcard" class="btn btn-secondary">
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="install-section" id="quick-start">
+        <div class="container">
+            <div class="install-command">
+                <button class="copy-btn" onclick="copyToClipboard('docker pull ghcr.io/starburst997/docker-compose-wildcard:latest')">Copy</button>
+                <code>docker pull ghcr.io/starburst997/docker-compose-wildcard:latest</code>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Why Docker Compose Wildcard DNS?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Solves Real Problems</h3>
+                    <p class="feature-description">
+                        Docker Compose can't natively resolve *.domain patterns. This lightweight solution fills that gap perfectly.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Lightweight & Fast</h3>
+                    <p class="feature-description">
+                        Only 8MB Alpine-based image. Minimal overhead with maximum performance using dnsmasq.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3 class="feature-title">Zero Configuration</h3>
+                    <p class="feature-description">
+                        Works out of the box with sensible defaults. Just add to your docker-compose.yml and go.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏗️</div>
+                    <h3 class="feature-title">Multi-Architecture</h3>
+                    <p class="feature-description">
+                        Supports both amd64 and arm64 architectures. Run anywhere from cloud to Raspberry Pi.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Dynamic Resolution</h3>
+                    <p class="feature-description">
+                        Automatically resolves any subdomain to your target service without pre-configuration.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Query Logging</h3>
+                    <p class="feature-description">
+                        Optional DNS query logging for debugging and monitoring subdomain access patterns.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="examples">
+        <div class="container">
+            <h2>Quick Setup</h2>
+            <div class="example-tabs">
+                <button class="tab active" onclick="showTab('basic')">Basic Setup</button>
+                <button class="tab" onclick="showTab('minio')">MinIO S3</button>
+                <button class="tab" onclick="showTab('multitenant')">Multi-Tenant</button>
+            </div>
+
+            <div id="basic-example" class="code-block">
+                <pre><code>version: '3.8'
+
+services:
+  dnsmasq:
+    image: ghcr.io/starburst997/docker-compose-wildcard:latest
+    environment:
+      WILDCARD_DOMAIN: myapp
+      LOG_QUERIES: "yes"
+    networks:
+      default:
+        ipv4_address: 172.21.0.253
+
+  myapp:
+    image: nginx:alpine
+    # Now accessible at *.myapp
+
+  client:
+    image: alpine
+    dns: 172.21.0.253
+    # Can now resolve any.subdomain.myapp
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16</code></pre>
+            </div>
+
+            <div id="minio-example" class="code-block" style="display: none;">
+                <pre><code>version: '3.8'
+
+services:
+  dnsmasq:
+    image: ghcr.io/starburst997/docker-compose-wildcard:latest
+    environment:
+      WILDCARD_DOMAIN: minio.local
+    networks:
+      default:
+        ipv4_address: 172.21.0.253
+
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_DOMAIN: minio.local
+    command: server /data
+    # Buckets accessible at bucket.minio.local
+
+  app:
+    image: myapp
+    dns: 172.21.0.253
+    # Can use S3 virtual-host-style: bucket.minio.local
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16</code></pre>
+            </div>
+
+            <div id="multitenant-example" class="code-block" style="display: none;">
+                <pre><code>version: '3.8'
+
+services:
+  dnsmasq:
+    image: ghcr.io/starburst997/docker-compose-wildcard:latest
+    environment:
+      WILDCARD_DOMAIN: saas.local
+    networks:
+      default:
+        ipv4_address: 172.21.0.253
+
+  app:
+    image: multitenant-app
+    environment:
+      WILDCARD_HOST: "*.saas.local"
+    # Handles: tenant1.saas.local, tenant2.saas.local, etc.
+
+  database:
+    image: postgres
+    dns: 172.21.0.253
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases">
+        <div class="container">
+            <h2>Perfect For</h2>
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <div class="use-case-emoji">🪣</div>
+                    <div class="use-case-title">S3-Compatible Storage</div>
+                    <div class="use-case-example">bucket.minio.local</div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-emoji">🏢</div>
+                    <div class="use-case-title">Multi-Tenant SaaS</div>
+                    <div class="use-case-example">customer.app.local</div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-emoji">🔌</div>
+                    <div class="use-case-title">Microservices</div>
+                    <div class="use-case-example">api.backend.local</div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-emoji">🧪</div>
+                    <div class="use-case-title">Development</div>
+                    <div class="use-case-example">feature.dev.local</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <strong>Docker Compose Wildcard DNS</strong>
+                    <br>
+                    <span style="opacity: 0.8;">Seamless subdomain resolution for containers</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/starburst997/docker-compose-wildcard">GitHub</a>
+                    <a href="https://github.com/starburst997/docker-compose-wildcard/issues">Issues</a>
+                    <a href="https://hub.docker.com/r/starburst997/docker-compose-wildcard">Docker Hub</a>
+                    <a href="https://github.com/starburst997/docker-compose-wildcard/releases">Releases</a>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div style="opacity: 0.6; font-size: 0.9rem;">
+                © 2024 Docker Compose Wildcard DNS. MIT License.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function showTab(tab) {
+            // Hide all examples
+            document.getElementById('basic-example').style.display = 'none';
+            document.getElementById('minio-example').style.display = 'none';
+            document.getElementById('multitenant-example').style.display = 'none';
+
+            // Show selected example
+            document.getElementById(tab + '-example').style.display = 'block';
+
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
