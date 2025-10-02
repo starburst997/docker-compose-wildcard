@@ -147,97 +147,11 @@
             flex-wrap: wrap;
         }
 
-        /* Installation Section */
-        .install-section {
-            padding: 1.5rem 0;
-            background: var(--bg);
-        }
-
-        .install-command {
-            background: var(--secondary);
-            color: #f6f8fa;
-            padding: 1.25rem;
-            border-radius: var(--radius);
-            font-family: 'Monaco', 'Courier New', monospace;
-            position: relative;
-            margin: 1rem 0;
-            overflow-x: auto;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.375rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Features Grid */
-        .features {
-            padding: 4rem 0;
-            background: var(--bg-light);
-        }
-
         h2 {
             font-size: 2.25rem;
             text-align: center;
             margin-bottom: 3rem;
             color: var(--text-primary);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .feature-card {
-            background: var(--bg);
-            padding: 2rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            border-color: var(--primary);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            color: white;
-            font-size: 24px;
-        }
-
-        .feature-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-        }
-
-        .feature-description {
-            color: var(--text-secondary);
-            line-height: 1.6;
         }
 
         /* Code Examples */
@@ -297,42 +211,6 @@
             color: var(--text-primary);
         }
 
-        /* Use Cases */
-        .use-cases {
-            padding: 4rem 0;
-            background: var(--bg-light);
-        }
-
-        .use-case-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .use-case {
-            background: var(--bg);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .use-case-emoji {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .use-case-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .use-case-example {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
         /* Footer */
         footer {
             padding: 3rem 0;
@@ -367,12 +245,6 @@
             opacity: 1;
         }
 
-        .divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 2rem 0;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -381,10 +253,6 @@
 
             .subtitle {
                 font-size: 1.1rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
             }
 
             .hero-buttons {
@@ -429,8 +297,8 @@
                     </svg>
                     GitHub
                 </a>
-                <a href="https://hub.docker.com/r/starburst997/docker-compose-wildcard" class="btn btn-primary">
-                    Docker Hub
+                <a href="https://github.com/starburst997/docker-compose-wildcard/pkgs/container/docker-compose-wildcard" class="btn btn-primary">
+                    GitHub Registry
                 </a>
             </div>
         </nav>
@@ -454,66 +322,7 @@
         </div>
     </section>
 
-    <section class="install-section" id="quick-start">
-        <div class="container">
-            <div class="install-command">
-                <button class="copy-btn" onclick="copyToClipboard('docker pull ghcr.io/starburst997/docker-compose-wildcard:latest')">Copy</button>
-                <code>docker pull ghcr.io/starburst997/docker-compose-wildcard:latest</code>
-            </div>
-        </div>
-    </section>
-
-    <section class="features">
-        <div class="container">
-            <h2>Why Docker Compose Wildcard DNS?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3 class="feature-title">Solves Real Problems</h3>
-                    <p class="feature-description">
-                        Docker Compose can't natively resolve *.domain patterns. This lightweight solution fills that gap perfectly.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">Lightweight & Fast</h3>
-                    <p class="feature-description">
-                        Only 8MB Alpine-based image. Minimal overhead with maximum performance using dnsmasq.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔧</div>
-                    <h3 class="feature-title">Zero Configuration</h3>
-                    <p class="feature-description">
-                        Works out of the box with sensible defaults. Just add to your docker-compose.yml and go.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏗️</div>
-                    <h3 class="feature-title">Multi-Architecture</h3>
-                    <p class="feature-description">
-                        Supports both amd64 and arm64 architectures. Run anywhere from cloud to Raspberry Pi.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3 class="feature-title">Dynamic Resolution</h3>
-                    <p class="feature-description">
-                        Automatically resolves any subdomain to your target service without pre-configuration.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3 class="feature-title">Query Logging</h3>
-                    <p class="feature-description">
-                        Optional DNS query logging for debugging and monitoring subdomain access patterns.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="examples">
+    <section class="examples" id="quick-start">
         <div class="container">
             <h2>Quick Setup</h2>
             <div class="example-tabs">
@@ -613,34 +422,6 @@ networks:
         </div>
     </section>
 
-    <section class="use-cases">
-        <div class="container">
-            <h2>Perfect For</h2>
-            <div class="use-case-grid">
-                <div class="use-case">
-                    <div class="use-case-emoji">🪣</div>
-                    <div class="use-case-title">S3-Compatible Storage</div>
-                    <div class="use-case-example">bucket.minio.local</div>
-                </div>
-                <div class="use-case">
-                    <div class="use-case-emoji">🏢</div>
-                    <div class="use-case-title">Multi-Tenant SaaS</div>
-                    <div class="use-case-example">customer.app.local</div>
-                </div>
-                <div class="use-case">
-                    <div class="use-case-emoji">🔌</div>
-                    <div class="use-case-title">Microservices</div>
-                    <div class="use-case-example">api.backend.local</div>
-                </div>
-                <div class="use-case">
-                    <div class="use-case-emoji">🧪</div>
-                    <div class="use-case-title">Development</div>
-                    <div class="use-case-example">feature.dev.local</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -652,29 +433,14 @@ networks:
                 <div class="footer-links">
                     <a href="https://github.com/starburst997/docker-compose-wildcard">GitHub</a>
                     <a href="https://github.com/starburst997/docker-compose-wildcard/issues">Issues</a>
-                    <a href="https://hub.docker.com/r/starburst997/docker-compose-wildcard">Docker Hub</a>
+                    <a href="https://github.com/starburst997/docker-compose-wildcard/pkgs/container/docker-compose-wildcard">GitHub Registry</a>
                     <a href="https://github.com/starburst997/docker-compose-wildcard/releases">Releases</a>
                 </div>
-            </div>
-            <div class="divider"></div>
-            <div style="opacity: 0.6; font-size: 0.9rem;">
-                © 2024 Docker Compose Wildcard DNS. MIT License.
             </div>
         </div>
     </footer>
 
     <script>
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = 'Copied!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            });
-        }
-
         function showTab(tab) {
             // Hide all examples
             document.getElementById('basic-example').style.display = 'none';
