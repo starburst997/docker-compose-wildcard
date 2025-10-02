@@ -1,0 +1,14 @@
+{
+  "name": "wildcard-dns-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Docker Compose wildcard DNS",
+  "type": "module",
+  "scripts": {
+    "server": "node server.js",
+    "client": "node client.js",
+    "test": "node client.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

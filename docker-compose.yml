@@ -1,0 +1,47 @@
+services:
+  # Wildcard DNS resolver
+  dnsmasq:
+    build: ./dnsmasq
+    image: ghcr.io/starburst997/docker-compose-wildcard:latest
+    container_name: wildcard-dns
+    environment:
+      WILDCARD_DOMAIN: test-server
+      LOG_QUERIES: "yes"
+    cap_add:
+      - NET_ADMIN
+    networks:
+      default:
+        ipv4_address: 172.21.0.253
+    restart: unless-stopped
+
+  # Test server that responds to wildcard subdomains
+  test-server:
+    build: ./test
+    command: ["node", "server.js"]
+    environment:
+      PORT: 3000
+      SERVICE_NAME: test-server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dnsmasq
+
+  # Test client that verifies wildcard DNS works
+  test-client:
+    build: ./test
+    command: ["node", "client.js"]
+    environment:
+      TARGET_SERVICE: test-server
+      TARGET_PORT: 3000
+      TEST_DELAY: 5000
+    dns: 172.21.0.253
+    depends_on:
+      - dnsmasq
+      - test-server
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
