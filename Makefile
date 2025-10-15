@@ -28,15 +28,6 @@ debug:
 logs:
 	@docker-compose logs -f
 
-# Create a release (requires version argument)
-release:
-	@if [ -z "$(VERSION)" ]; then \
-		echo "Error: VERSION is required"; \
-		echo "Usage: make release VERSION=1.0.0"; \
-		exit 1; \
-	fi
-	@./release.sh $(VERSION)
-
 # Display help
 help:
 	@echo "Docker Compose Wildcard DNS - Makefile"
@@ -47,10 +38,8 @@ help:
 	@echo "  clean    - Clean up containers and networks"
 	@echo "  debug    - Run services with logs for debugging"
 	@echo "  logs     - Show service logs"
-	@echo "  release  - Create a new release (requires VERSION=x.x.x)"
 	@echo "  help     - Show this help message"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make build"
 	@echo "  make test"
-	@echo "  make release VERSION=1.0.0"

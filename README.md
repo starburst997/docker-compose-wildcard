@@ -1,6 +1,6 @@
 # Docker Compose Wildcard DNS
 
-[![Build and Test](https://github.com/starburst997/docker-compose-wildcard/actions/workflows/ci.yml/badge.svg)](https://github.com/starburst997/docker-compose-wildcard/actions/workflows/ci.yml)
+[![Build and Test](https://github.com/starburst997/docker-compose-wildcard/actions/workflows/release.yml/badge.svg)](https://github.com/starburst997/docker-compose-wildcard/actions/workflows/release.yml)
 [![Docker Image](https://img.shields.io/badge/docker-ghcr.io%2Fstarburst997%2Fdocker--compose--wildcard-blue)](https://github.com/starburst997/docker-compose-wildcard/pkgs/container/docker-compose-wildcard)
 
 Enable wildcard subdomain resolution in Docker Compose environments with zero configuration.
