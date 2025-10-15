@@ -1,0 +1,66 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build images
+        run: docker compose build
+
+      - name: Run tests
+        run: docker compose up --exit-code-from test-client test-client
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Initialize custom bot
+        id: bot
+        uses: starburst997/custom-bot-init@v1
+        with:
+          app-id: ${{ secrets.BOT_ID }}
+          private-key: ${{ secrets.BOT_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.bot.outputs.token }}
+
+      - name: Determine Version
+        id: version
+        uses: starburst997/auto-version@v1
+        with:
+          git-config: false
+          git-push: false
+
+      - name: Build and Push Docker
+        uses: starburst997/docker-helm-push@v1
+        with:
+          additional-tags: latest
+          version: ${{ steps.version.outputs.version }}
+          platforms: linux/amd64,linux/arm64
+          context: ./dnsmasq
+          git-push: true
+
+      - name: Generate changelog and create release
+        uses: starburst997/commits-logs@v1
+        with:
+          token: ${{ steps.bot.outputs.token }}
